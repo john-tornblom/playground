@@ -45,6 +45,7 @@ def main():
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
+        print ""
         usage()
         sys.exit(2)
 
@@ -67,6 +68,8 @@ def main():
             assert False, "unhandled option"
     
     if not args:
+        print "missing source"
+        print ""
         usage()
         sys.exit(1)
 
