@@ -1,0 +1,88 @@
+#!/usr/bin/python
+#-*- coding: utf-8 -*-
+#
+# XBMC Alarm
+# Copyright (c) 2011 John Törnblom
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+import sys
+import getopt
+import time
+
+try:
+    from xbmc.xbmcclient import *
+except:
+    sys.path.append('../../lib/python')
+    from xbmcclient import *
+
+def usage():
+    print "xbmc-alarm [OPTION] SOURCE"
+    print ""
+    print "Valid options are:"
+    print "\t-?, --help\t\t\tWill bring up this message"
+    print "\t-h, --host=HOST\t\t\tChoose what HOST to connect to (default=localhost)"
+    print "\t-p, --port=PORT\t\t\tChoose what PORT to connect to (default=9777)"
+    print "\t-r, --random\t\t\tSet random on"
+    pass
+
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "?h:p:r:", ["help", "host=", "port=", "random"])
+    except getopt.GetoptError, err:
+        # print help information and exit:
+        print str(err) # will print something like "option -a not recognized"
+        usage()
+        sys.exit(2)
+
+    ip = "localhost"
+    port = 9777
+    verbose = False
+    random = False
+
+    for o, a in opts:
+        if o in ("-?", "--help"):
+            usage()
+            sys.exit()
+        elif o in ("-h", "--host"):
+            ip = a
+        elif o in ("-p", "--port"):
+            port = int(a)
+        elif o in ("-r", "--random"):
+            random = True
+        else:
+            assert False, "unhandled option"
+    
+    if not args:
+        usage()
+        sys.exit(1)
+
+    client = XBMCClient("xbmc-alarm")
+    client.connect(ip, port)
+
+    client.send_action("XBMC.SetVolume(0)")
+    if random:
+        client.send_action("XBMC.PlayerControl(RandomOn)")
+    client.send_action("XBMC.PlayMedia(%s)" % args[0])
+
+    for i in range(1, 100):
+        client.send_action("XBMC.SetVolume(%d)" % i)
+        time.sleep(3) # Seconds to wait for next step (one step is +1% on the volume)
+
+    client.close()
+
+if __name__=="__main__":
+    main()
