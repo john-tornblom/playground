@@ -24,10 +24,10 @@ import getopt
 import time
 
 try:
-    from xbmc.xbmcclient import *
+    from xbmc.xbmcclient import XBMCClient
 except:
     sys.path.append('../../lib/python')
-    from xbmcclient import *
+    from xbmcclient import XBMCClient
 
 def usage():
     print "xbmc-alarm [OPTION] SOURCE"
@@ -51,7 +51,6 @@ def main():
 
     ip = "localhost"
     port = 9777
-    verbose = False
     random = False
 
     for o, a in opts:
