@@ -30,7 +30,7 @@ except:
     from xbmcclient import XBMCClient
 
 def usage():
-    print "xbmc-alarm [OPTION] SOURCE"
+    print "%s [OPTION] SOURCE" % sys.argv[0]
     print ""
     print "Valid options are:"
     print "\t-?, --help\t\t\tWill bring up this message"
