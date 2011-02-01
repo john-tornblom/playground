@@ -37,11 +37,12 @@ def usage():
     print "\t-h, --host=HOST\t\t\tChoose what HOST to connect to (default=localhost)"
     print "\t-p, --port=PORT\t\t\tChoose what PORT to connect to (default=9777)"
     print "\t-r, --random\t\t\tSet random on"
+    print "\t-d, --delay=SEC\t\t\tThe delay in seconds to wait for next volume step where one step is +1% on the volume (default=3)"
     pass
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "?h:p:r", ["help", "host=", "port=", "random"])
+        opts, args = getopt.getopt(sys.argv[1:], "?h:p:rd:", ["help", "host=", "port=", "random", "delay="])
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -52,6 +53,7 @@ def main():
     ip = "localhost"
     port = 9777
     random = False
+    delay = 3
 
     for o, a in opts:
         if o in ("-?", "--help"):
@@ -63,6 +65,8 @@ def main():
             port = int(a)
         elif o in ("-r", "--random"):
             random = True
+        elif o in ("-d", "--delay"):
+            delay = int(a)
         else:
             assert False, "unhandled option"
     
@@ -82,7 +86,7 @@ def main():
 
     for i in range(1, 100):
         client.send_action("XBMC.SetVolume(%d)" % i)
-        time.sleep(3) # Seconds to wait for next step (one step is +1% on the volume)
+        time.sleep(delay)
 
     client.close()
 
