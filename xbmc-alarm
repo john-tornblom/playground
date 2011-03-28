@@ -77,7 +77,9 @@ def main():
         sys.exit(1)
 
     client = XBMCClient("xbmc-alarm")
-    client.connect(ip, port)
+    if not client.connect(ip, port):
+        print "Unable to connect to %s:%d" % (ip,port)
+        sys.exit(1)
 
     client.send_action("XBMC.SetVolume(0)")
     if random:
