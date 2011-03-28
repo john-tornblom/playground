@@ -33,8 +33,8 @@ def usage():
     print "%s [OPTION] SOURCE" % sys.argv[0]
     print ""
     print "Valid options are:"
-    print "\t-?, --help\t\t\tWill bring up this message"
-    print "\t-h, --host=HOST\t\t\tChoose what HOST to connect to (default=localhost)"
+    print "\t-h, --help\t\t\tWill bring up this message"
+    print "\t-H, --host=HOST\t\t\tChoose what HOST to connect to (default=localhost)"
     print "\t-p, --port=PORT\t\t\tChoose what PORT to connect to (default=9777)"
     print "\t-r, --random\t\t\tSet random on"
     print "\t-d, --delay=SEC\t\t\tThe delay in seconds to wait for next volume step where one step is +1% on the volume (default=3)"
@@ -42,7 +42,7 @@ def usage():
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "?h:p:rd:", ["help", "host=", "port=", "random", "delay="])
+        opts, args = getopt.getopt(sys.argv[1:], "hH:p:rd:", ["help", "host=", "port=", "random", "delay="])
     except getopt.GetoptError, err:
         # print help information and exit:
         print str(err) # will print something like "option -a not recognized"
@@ -56,10 +56,10 @@ def main():
     delay = 3
 
     for o, a in opts:
-        if o in ("-?", "--help"):
+        if o in ("-h", "--help"):
             usage()
             sys.exit()
-        elif o in ("-h", "--host"):
+        elif o in ("-H", "--host"):
             ip = a
         elif o in ("-p", "--port"):
             port = int(a)
