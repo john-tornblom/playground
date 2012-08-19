@@ -1,0 +1,80 @@
+#!/bin/bash
+
+usage()
+{
+    cat << EOF
+ usage: $0 [options] "Channel name"
+
+This script will start playing a tvheadend webstream in mplayer
+
+OPTIONS:
+    -s      Base URL to server
+    -a      Audio codec [aac, mpeg2audio]
+    -v      Video codec [h264, mpeg2video, mpeg4video, vp8],
+    -r      Resolution (height) to use with -v [120 to 576]
+    -m      Muxing container [matroska, mpegps, mpeg2ts, pass]
+EOF
+}
+
+
+SERVER="http://localhost:9981"
+ACODEC=
+VCODEC=
+TRANSCODE=
+RES=384
+MUX=matroska
+
+OPTIND=1
+while getopts "ha:v:s:r:m:" opt; do
+    case $opt in
+        h)
+            usage
+            exit 1
+            ;;
+        a)
+            ACODEC="`echo $OPTARG | tr '[:lower:]' '[:upper:]'`"
+	    TRANSCODE="1"
+            ;;
+        v)
+            VCODEC="`echo $OPTARG | tr '[:lower:]' '[:upper:]'`"
+	    TRANSCODE="1"
+            ;;
+        s)
+            SERVER=$OPTARG
+            ;;
+        r)
+            RES=$OPTARG
+            TRANSCODE="1"
+            ;;
+        m)
+            MUX=$OPTARG
+            ;;
+        ?)
+            usage
+            exit
+            ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+if [ -z "$1" ]; then
+    usage
+    exit
+fi
+
+URL="$SERVER/stream/channel/$1?mux=$MUX"
+
+
+if [ -n "$TRANSCODE" ]; then
+    URL="$URL&transcode=1&resolution=$RES"
+fi
+
+if [ -n "$ACODEC" ]; then
+    URL="$URL&acodec=$ACODEC"
+fi
+
+if [ -n "$VCODEC" ]; then
+    URL="$URL&vcodec=$VCODEC"
+fi
+
+mplayer -cache 4000 "$URL"
