@@ -8,11 +8,12 @@ usage()
 This script will start playing a tvheadend webstream in mplayer
 
 OPTIONS:
-    -s      Base URL to server
-    -a      Audio codec [aac, mpeg2audio]
-    -v      Video codec [h264, mpeg2video, mpeg4video, vp8],
+    -u      URL to server (http://localhost:9981)
+    -a      Audio codec [aac, mpeg2audio, pass, none]
+    -v      Video codec [h264, mpeg4video, vp8, pass, none],
+    -s      Subtitle codec [pass, none]
     -r      Resolution (height) to use with -v [120 to 576]
-    -m      Muxing container [matroska, mpegps, mpeg2ts, pass]
+    -m      Muxing container [matroska, mpeg2ts, mpegps, pass]
 EOF
 }
 
@@ -20,12 +21,13 @@ EOF
 SERVER="http://localhost:9981"
 ACODEC=
 VCODEC=
+SCODEC=
 TRANSCODE=
 RES=384
 MUX=matroska
 
 OPTIND=1
-while getopts "ha:v:s:r:m:" opt; do
+while getopts "ha:v:s:r:m:c:u:" opt; do
     case $opt in
         h)
             usage
@@ -40,14 +42,17 @@ while getopts "ha:v:s:r:m:" opt; do
 	    TRANSCODE="1"
             ;;
         s)
-            SERVER=$OPTARG
+            SCODEC="`echo $OPTARG | tr '[:lower:]' '[:upper:]'`"
+            TRANSCODE="1"
             ;;
         r)
             RES=$OPTARG
-            TRANSCODE="1"
             ;;
         m)
             MUX=$OPTARG
+            ;;
+        u)
+            SERVER=$OPTARG
             ;;
         ?)
             usage
@@ -75,6 +80,10 @@ fi
 
 if [ -n "$VCODEC" ]; then
     URL="$URL&vcodec=$VCODEC"
+fi
+
+if [ -n "$SCODEC" ]; then
+    URL="$URL&scodec=$SCODEC"
 fi
 
 mplayer -cache 4000 "$URL"
