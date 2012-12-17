@@ -13,7 +13,7 @@ OPTIONS:
     -v      Video codec [h264, mpeg4video, vp8, pass, none],
     -s      Subtitle codec [pass, none]
     -r      Resolution (height) to use with -v [120 to 576]
-    -m      Muxing container [matroska, mpeg2ts, mpegps, pass]
+    -m      Muxing container [matroska, mpegts, mpegps, pass]
 EOF
 }
 
