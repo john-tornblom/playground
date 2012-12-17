@@ -86,4 +86,4 @@ if [ -n "$SCODEC" ]; then
     URL="$URL&scodec=$SCODEC"
 fi
 
-mplayer -cache 4000 "$URL"
+mplayer -cache 4000 -cache-min 50 "$URL"
