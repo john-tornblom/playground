@@ -27,7 +27,7 @@ MODEL_HOME=$1
 MODEL_NAME=$(basename $MODEL_HOME)
 
 python -m rsl.gen_erate \
-	--import $MC_HOME/model/com.mentor.nucleus.bp.core/src/xtumlmc_schema.sql \
+	--import $MC_HOME/schema/sql/xtumlmc_schema.sql \
 	--import $MODEL_HOME/gen/code_generation/$MODEL_NAME.sql \
 	--include $MODEL_HOME/gen \
 	--include $MC_HOME/arc \
