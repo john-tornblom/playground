@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ ! -d "pyxtuml" ]; then
-    git clone git@github.com:john-tornblom/pyxtuml.git
-fi
+python -m pip install --user ply
+python -m pip install --user pyxtuml
+python -m pip install --user pyrsl
 
 if [ ! -d "mc" ]; then
     git clone git@github.com:xtuml/mc.git
@@ -13,7 +13,6 @@ cat > run_mc3020.sh <<'EOF'
 #!/bin/bash
 SCRIPT_HOME=$(dirname $0)
 MC_HOME=$SCRIPT_HOME/mc
-PYXTUML_HOME=$SCRIPT_HOME/pyxtuml
 
 export ROX_MC_ARC_DIR="."
 
@@ -27,7 +26,7 @@ fi
 MODEL_HOME=$1
 MODEL_NAME=$(basename $MODEL_HOME)
 
-$PYXTUML_HOME/gen_erate.py \
+python -m rsl.gen_erate \
 	--import $MC_HOME/model/com.mentor.nucleus.bp.core/src/xtumlmc_schema.sql \
 	--import $MODEL_HOME/gen/code_generation/$MODEL_NAME.sql \
 	--include $MODEL_HOME/gen \
