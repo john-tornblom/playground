@@ -5,7 +5,7 @@ python -m pip install --user pyxtuml
 python -m pip install --user pyrsl
 
 if [ ! -d "mc" ]; then
-    git clone git@github.com:xtuml/mc.git
+    git clone git@github.com:john-tornblom/mc.git -b pyrsl_fixes
 fi
 
 
