@@ -25,15 +25,15 @@ fi
 
 MODEL_HOME=$1
 MODEL_NAME=$(basename $MODEL_HOME)
-
+DIALECT=c
 python -m rsl.gen_erate \
 	--import $MC_HOME/schema/sql/xtumlmc_schema.sql \
 	--import $MODEL_HOME/gen/code_generation/$MODEL_NAME.sql \
 	--include $MODEL_HOME/gen \
 	--include $MC_HOME/arc \
-	--include $MC_HOME/arc/c \
+	--include $MC_HOME/arc/$DIALECT \
 	--include $MC_HOME/schema/colors \
-	$MC_HOME/arc/c/sys.arc
+	$MC_HOME/arc/$DIALECT/sys.arc
 
 EOF
 
