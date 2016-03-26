@@ -59,7 +59,8 @@ def emit_edge(out, source_uid, target_uid):
 
 def emit_graph(out, tu):
     out.write("digraph {\n")
-
+    out.write("rankdir=LR;")
+    
     cluster_root = dict()
 
     def add_to_cluster(filename):
