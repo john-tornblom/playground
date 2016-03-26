@@ -42,7 +42,7 @@ def emit_cluster(out, cluster_path, children, parent_path=''):
         
         out.write('subgraph "cluster_%s" {\n' % cluster_path)
         out.write('label = "%s";\n' % label)
-        
+
     for node in nodes:
         emit_node(out, node, os.path.basename(node))
         
@@ -57,16 +57,15 @@ def emit_edge(out, source_uid, target_uid):
     out.write('"%s" -> "%s";\n' % (source_uid, target_uid))
 
 
-def emit_graph(out, tu):
+def emit_graph(out, tu, once=False):
     out.write("digraph {\n")
     out.write("rankdir=LR;")
     
     cluster_root = dict()
-
+    nodes = set()
+    
     def add_to_cluster(filename):
-        filename = os.path.abspath(filename)
         dirname = os.path.dirname(filename)
-
         cluster = cluster_root
         path = ''
         for name in dirname.split(os.path.sep):
@@ -78,15 +77,18 @@ def emit_graph(out, tu):
 
         cluster[filename] = filename
 
-    add_to_cluster(tu.spelling)
+    add_to_cluster(os.path.abspath(tu.spelling))
     for i in tu.get_includes():
-        add_to_cluster(i.include.name)
-        add_to_cluster(i.source.name)
+        source = os.path.abspath(i.source.name)
+        target = os.path.abspath(i.include.name)
+        if target not in nodes:
+            add_to_cluster(source)
+            add_to_cluster(target)
+            emit_edge(out, source, target)
 
-        emit_edge(out,
-                  os.path.abspath(i.source.name),
-                  os.path.abspath(i.include.name))
-
+        if once:
+            nodes.add(target)
+        
     emit_cluster(out, '', cluster_root)
 
     out.write("}\n")
