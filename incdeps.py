@@ -22,13 +22,14 @@ logger = logging.getLogger('incdeps')
 
 
 def emit_node(out, uid, label):
-    out.write('"%s" [label="%s"];\n' % (uid, label))
+    out.write('  "%s" [label="%s"];\n' % (uid, label))
 
 
-def emit_cluster(out, cluster_path, children, parent_path=''):
+def emit_cluster(out, children, cluster_path='', parent_path=''):
+    prefix = '  ' * (cluster_path.count(os.path.sep) - 1)
+    
     nodes = list()
     clusters = dict()
-    
     for path, item in children.items():
         if isinstance(item, str):
             nodes.append(path)
@@ -37,33 +38,33 @@ def emit_cluster(out, cluster_path, children, parent_path=''):
 
     if nodes or len(clusters) > 1:
         label = cluster_path.replace(parent_path, '', 1)
-        label = label.replace(os.path.sep + os.path.sep, os.path.sep)
         parent_path = cluster_path + os.path.sep
-        
-        out.write('subgraph "cluster_%s" {\n' % cluster_path)
-        out.write('label="%s";\n' % label)
-        out.write('style=filled;\n')
-        out.write('color=black;\n')
-        out.write('fillcolor="#CCCCCC30";\n')
+        out.write(prefix + 'subgraph "cluster %s" {\n' % cluster_path)
+        out.write(prefix + '  label="%s";\n' % label)
+        out.write(prefix + '  style=filled;\n')
+        out.write(prefix + '  color=black;\n')
+        out.write(prefix + '  fillcolor="#CCCCCC30";\n')
 
     for node in nodes:
+        out.write(prefix)
         emit_node(out, node, os.path.basename(node))
         
     for path, item in clusters.items():
-        emit_cluster(out, path, item, parent_path)
+        emit_cluster(out, item, path, parent_path)
 
     if nodes or len(clusters) > 1:
+        out.write(prefix)
         out.write("}\n")
     
 
 def emit_edge(out, source_uid, target_uid):
-    out.write('"%s" -> "%s";\n' % (source_uid, target_uid))
+    out.write('  "%s" -> "%s";\n' % (source_uid, target_uid))
 
 
 def emit_graph(out, tu, once=False):
     out.write('digraph {\n')
-    out.write('rankdir=LR;')
-    out.write('node [shape=box, style=rounded];')
+    out.write('  rankdir=LR;\n')
+    out.write('  node [shape=box, style=rounded];\n')
     
     cluster_root = dict()
     nodes = set()
@@ -73,7 +74,10 @@ def emit_graph(out, tu, once=False):
         cluster = cluster_root
         path = ''
         for name in dirname.split(os.path.sep):
-            path += os.path.sep + name
+            if path != os.path.sep:
+                path += os.path.sep
+
+            path += name
             if path not in cluster:
                 cluster[path] = dict()
 
@@ -93,7 +97,7 @@ def emit_graph(out, tu, once=False):
         if once:
             nodes.add(target)
         
-    emit_cluster(out, '', cluster_root)
+    emit_cluster(out, cluster_root)
 
     out.write("}\n")
 
