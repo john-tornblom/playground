@@ -58,8 +58,8 @@ def emit_edge(out, source_uid, target_uid):
 
 
 def emit_graph(out, tu, once=False):
-    out.write("digraph {\n")
-    out.write("rankdir=LR;")
+    out.write('digraph {\n')
+    out.write('rankdir=LR;')
     
     cluster_root = dict()
     nodes = set()
