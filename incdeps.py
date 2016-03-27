@@ -41,7 +41,10 @@ def emit_cluster(out, cluster_path, children, parent_path=''):
         parent_path = cluster_path + os.path.sep
         
         out.write('subgraph "cluster_%s" {\n' % cluster_path)
-        out.write('label = "%s";\n' % label)
+        out.write('label="%s";\n' % label)
+        out.write('style=filled;\n')
+        out.write('color=black;\n')
+        out.write('fillcolor="#CCCCCC30";\n')
 
     for node in nodes:
         emit_node(out, node, os.path.basename(node))
