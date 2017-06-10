@@ -6,13 +6,20 @@ A simple command line tool for dumping a Graphviz description (dot) that
 describes include dependencies. Heavily inspired by cindex-includes.py
 disitributed with the clang source code.
 """
-
+import ctypes.util
 import logging
 import sys
 import os
 import optparse
 
-from clang.cindex import Index
+from clang.cindex import Index, Config
+
+
+for libname in ['clang', 'clang-4.0', 'clang-3.9', 'clang-3.8', 'clang-3.7']:
+    filename = ctypes.util.find_library(libname)
+    if filename:
+        Config.set_library_file(filename)
+        break
 
 
 logger = logging.getLogger('incdeps')
