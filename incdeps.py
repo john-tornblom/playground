@@ -108,13 +108,12 @@ def emit_graph(out, tu, once=False):
 
 def main():
     if len(sys.argv) < 2:
-        print('missing arguments (see -h for help)')
+        sys.stderr.write('missing arguments (see -h for help)\n')
         sys.exit(1)
         
     if '-h' in sys.argv:
-        print(__doc__.strip())
-        print('')
-        print('usage example: %s /usr/include/stdio.h | dot -Txlib' %  sys.argv[0])
+        sys.stderr.write('%s\n\n' % __doc__.strip())
+        sys.stderr.write('usage example: %s /usr/include/stdio.h | dot -Txlib\n' %  sys.argv[0])
         sys.exit(1)
         
     logging.basicConfig(level=logging.INFO)
