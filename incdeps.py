@@ -132,7 +132,7 @@ def main():
                                             d.location.line,
                                             d.spelling))
     else:
-        rc = -1
+        rc = 1
         
     sys.exit(rc)
 
