@@ -100,8 +100,6 @@ def emit_graph(out, tu, once=False):
 
 
 def main():
-    logging.basicConfig()
-    
     if len(sys.argv) < 2:
         print('missing arguments (see -h for help)')
         sys.exit(1)
@@ -112,6 +110,7 @@ def main():
         print('usage example: %s /usr/include/stdio.h | dot -Txlib' %  sys.argv[0])
         sys.exit(1)
         
+    logging.basicConfig(level=logging.INFO)
     index = Index.create()
     tu = index.parse(None, sys.argv[1:])
     rc = 0
