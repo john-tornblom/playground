@@ -5,9 +5,6 @@
 A simple command line tool for dumping a Graphviz description (dot) that
 describes include dependencies. Heavily inspired by cindex-includes.py
 disitributed with the clang source code.
-
-Usage example:
-  ./incdeps.py /usr/include/stdio.h | dot -Txlib
 """
 
 import logging
@@ -105,6 +102,16 @@ def emit_graph(out, tu, once=False):
 def main():
     logging.basicConfig()
     
+    if len(sys.argv) < 2:
+        print('missing arguments (see -h for help)')
+        sys.exit(1)
+        
+    if '-h' in sys.argv:
+        print(__doc__.strip())
+        print('')
+        print('usage example: %s /usr/include/stdio.h | dot -Txlib' %  sys.argv[0])
+        sys.exit(1)
+        
     index = Index.create()
     tu = index.parse(None, sys.argv[1:])
     rc = 0
