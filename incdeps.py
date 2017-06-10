@@ -10,7 +10,6 @@ import ctypes.util
 import logging
 import sys
 import os
-import optparse
 
 from clang.cindex import Index, Config
 
